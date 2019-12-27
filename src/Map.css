@@ -1,0 +1,12 @@
+.map {
+  padding: 1em;
+}
+
+.map-inner {
+  padding: 1em;
+}
+
+.grid-pressed {
+  background-color: #456799 !important;
+  color: #ffffff !important;
+}

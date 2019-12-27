@@ -1,0 +1,17 @@
+.log {
+  padding: 1em;
+}
+
+.log-inner {
+  padding: 1em;
+}
+
+.log-text {
+  padding: 2em 15%;
+}
+
+.log-buttons {
+  padding: 0 40%;
+  display: flex;
+  justify-content: space-between;
+}
