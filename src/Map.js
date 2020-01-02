@@ -29,7 +29,11 @@ class Map extends React.Component {
   renderBlock(block, index) {
     return (
       <Grid item xs key={index}>
-        <Block code={block[0]} note={block[1]} pressed={this.props.state[block[0]]} />
+        <Block
+          code={block[0]}
+          note={block[1]}
+          pressed={this.props.state[block[0]]}
+        />
       </Grid>
     )
   }

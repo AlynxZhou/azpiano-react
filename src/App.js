@@ -114,16 +114,18 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="app">
         <Container maxWidth="xl">
           <Map
             keymap={this.state.keymap}
-            state={this.state.map} />
+            state={this.state.map}
+          />
           <Log
             onDeleteClick={this.onDeleteClick.bind(this)}
             onSpaceClick={this.onSpaceClick.bind(this)}
             onReturnClick={this.onReturnClick.bind(this)}
-            state={this.state.log} />
+            state={this.state.log}
+          />
         </Container>
       </div>
     )

@@ -1,3 +1,15 @@
+AZPiano-React
+=============
+
+A piano liked app that record your keyboard typing as notes.
+------------------------------------------------------------
+
+Demo: <https://piano.alynx.moe/>
+
+Require Web Audio API support.
+
+------------------------------------------------------------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

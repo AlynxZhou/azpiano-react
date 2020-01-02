@@ -17,25 +17,28 @@ class Log extends React.Component {
                 InputProps={{readOnly: true}}
                 fullWidth
                 rows="8"
-                multiline />
+                multiline
+              />
             </div>
             <div className="log-buttons">
-              <Button
-                className="log-button">Ctrl +</Button>
+              <Button className="log-button">Ctrl +</Button>
               <Button
                 className="log-button"
                 variant="contained"
                 color="secondary"
-                onClick={this.props.onDeleteClick}>Backspace</Button>
+                onClick={this.props.onDeleteClick}
+              >Backspace</Button>
               <Button
                 className="log-button"
                 variant="contained"
-                onClick={this.props.onSpaceClick}>Space</Button>
+                onClick={this.props.onSpaceClick}
+              >Space</Button>
               <Button
                 className="log-button"
                 variant="contained"
                 color="primary"
-                onClick={this.props.onReturnClick}>Enter</Button>
+                onClick={this.props.onReturnClick}
+              >Enter</Button>
             </div>
           </div>
         </Paper>
