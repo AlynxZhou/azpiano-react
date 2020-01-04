@@ -1,6 +1,7 @@
 import React from 'react'
 import Map from './Map'
 import Log from './Log'
+import Settings from './Settings'
 import AudioPlayer from './AudioPlayer'
 import Base64Decoder from './Base64Decoder'
 import defaultKeymap from './keymap/default.json'
@@ -17,9 +18,11 @@ class App extends React.Component {
     this.player = new AudioPlayer()
     this.decoder = new Base64Decoder()
     this.state = {
-      log: [],
       keymap: defaultKeymap,
-      map: {}
+      log: [],
+      map: {},
+      display: "digit",
+      layout: "default"
     }
 
     this.codesNotes = {}
@@ -112,6 +115,16 @@ class App extends React.Component {
     this.setState({log})
   }
 
+  onDisplayChange(event) {
+    const display = event.options[event.selectedIndex].value
+    this.setState({display})
+  }
+
+  onLayoutChange(event) {
+    const layout = event.options[event.selectedIndex].value
+    this.setState({layout})
+  }
+
   render() {
     return (
       <div className="app">
@@ -119,12 +132,18 @@ class App extends React.Component {
           <Map
             keymap={this.state.keymap}
             state={this.state.map}
+            display={this.state.display}
+            layout={this.state.layout}
           />
           <Log
             onDeleteClick={this.onDeleteClick.bind(this)}
             onSpaceClick={this.onSpaceClick.bind(this)}
             onReturnClick={this.onReturnClick.bind(this)}
             state={this.state.log}
+          />
+          <Settings
+            onDisplayChange={this.onDisplayChange.bind(this)}
+            onLayoutChange={this.onLayoutChange.bind(this)}
           />
         </Container>
       </div>
