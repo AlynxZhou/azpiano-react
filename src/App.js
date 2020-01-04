@@ -44,6 +44,11 @@ class App extends React.Component {
     this.updateLayout()
 
     this.notesBuffers = {}
+
+    this.notesDigits = notesDigits
+  }
+
+  componentDidMount() {
     // Webpack trunked loading.
     import('./notesBuffers.json').then((module) => {
       const notesBuffers = module.default
@@ -55,11 +60,6 @@ class App extends React.Component {
         })
       }
     })
-
-    this.notesDigits = notesDigits
-  }
-
-  componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown.bind(this))
     document.addEventListener('keyup', this.onKeyUp.bind(this))
   }
