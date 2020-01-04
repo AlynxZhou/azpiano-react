@@ -8,7 +8,6 @@ import Base64Decoder from './Base64Decoder'
 import defaultLayout from './layouts/default.json'
 import ctrlcapsLayout from './layouts/ctrlcaps.json'
 import hhkbLayout from './layouts/hhkb.json'
-import notesBuffers from './notesBuffers.json'
 import notesDigits from './notesDigits.json'
 import './App.css'
 import Container from '@material-ui/core/Container'
@@ -45,13 +44,17 @@ class App extends React.Component {
     this.updateLayout()
 
     this.notesBuffers = {}
-    for (let k in notesBuffers) {
-      this.player.decodeAudioData(this.decoder.decode(
-        notesBuffers[k].substring(OGG_HEADER_LENGTH)
-      ), (buffer) => {
-        this.notesBuffers[k] = buffer
-      })
-    }
+    // Webpack trunked loading.
+    import('./notesBuffers.json').then((module) => {
+      const notesBuffers = module.default
+      for (const k in notesBuffers) {
+        this.player.decodeAudioData(this.decoder.decode(
+          notesBuffers[k].substring(OGG_HEADER_LENGTH)
+        ), (buffer) => {
+          this.notesBuffers[k] = buffer
+        })
+      }
+    })
 
     this.notesDigits = notesDigits
   }
@@ -80,15 +83,14 @@ class App extends React.Component {
 
   updateLayout() {
     this.codesNotes = {}
-    for (let row of this.layout) {
-      for (let grid of row) {
+    for (const row of this.layout) {
+      for (const grid of row) {
         this.codesNotes[grid[0]] = grid[1]
       }
     }
   }
 
   onKeyDown(event) {
-    console.log(event.code)
     event.preventDefault()
     switch (event.code) {
       case 'F1':
