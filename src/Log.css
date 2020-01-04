@@ -10,8 +10,16 @@
   padding: 2em 15%;
 }
 
+.log-text textarea {
+  font-family: monospace;
+}
+
 .log-buttons {
-  padding: 0 40%;
+  padding: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+}
+
+.log-item {
+  padding: 0 1em;
 }

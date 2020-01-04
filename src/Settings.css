@@ -1,0 +1,14 @@
+.settings {
+	padding: 1em;
+}
+
+.settings-inner {
+	padding: 1em;
+	display: flex;
+	justify-content: center;
+}
+
+.settings-item {
+	width: 10em;
+	padding: 0 1em;
+}
