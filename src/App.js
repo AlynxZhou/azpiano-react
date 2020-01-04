@@ -11,6 +11,8 @@ import hhkbLayout from './layouts/hhkb.json'
 import notesDigits from './notesDigits.json'
 import './App.css'
 import Container from '@material-ui/core/Container'
+import Paper from '@material-ui/core/Paper'
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 const OGG_HEADER_LENGTH = 'data:audio/ogg;base64,'.length
 
@@ -27,6 +29,8 @@ class App extends React.Component {
     }
     this.displayOptions = ['digit', 'note']
     this.state = {
+      'ready': false,
+      'percent': 0,
       'logState': [],
       'logEnabled': true,
       'mapState': {},
@@ -52,11 +56,20 @@ class App extends React.Component {
     // Webpack trunked loading.
     import('./notesBuffers.json').then((module) => {
       const notesBuffers = module.default
+      const totalLength = Object.keys(notesBuffers).length
       for (const k in notesBuffers) {
         this.player.decodeAudioData(this.decoder.decode(
           notesBuffers[k].substring(OGG_HEADER_LENGTH)
         ), (buffer) => {
           this.notesBuffers[k] = buffer
+          if (!this.state.ready) {
+            this.setState({
+              'percent': Math.round(
+                Object.keys(this.notesBuffers).length * 100 / totalLength
+              ),
+              'ready': Object.keys(this.notesBuffers).length === totalLength
+            })
+          }
         })
       }
     })
@@ -121,7 +134,7 @@ class App extends React.Component {
     const note = this.codesNotes[code]
     const {logState, mapState} = this.state
     mapState[code] = true
-    if (this.state.logEnabled) {
+    if (this.state.logEnabled && this.state.ready) {
       logState.push(this.notesDigits[note])
     }
     this.setState({logState, mapState})
@@ -210,6 +223,30 @@ class App extends React.Component {
   }
 
   render() {
+    if (!this.state.ready) {
+      return (
+        <div className="app">
+          <Container maxWidth="xl">
+            <div className="loading">
+              <Paper>
+                <div className="loading-inner">
+                  <div className="loading-item">
+                    <LinearProgress />
+                  </div>
+                  <div className="loading-item">
+                    <LinearProgress
+                      variant="determinate"
+                      value={this.state.percent}
+                      color="secondary"
+                    />
+                  </div>
+                </div>
+              </Paper>
+            </div>
+          </Container>
+        </div>
+      )
+    }
     return (
       <div className="app">
         <Container maxWidth="xl">
