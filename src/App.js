@@ -2,6 +2,7 @@ import React from 'react'
 import Map from './Map'
 import Log from './Log'
 import Settings from './Settings'
+import Info from './Info'
 import AudioPlayer from './AudioPlayer'
 import Base64Decoder from './Base64Decoder'
 import defaultLayout from './layouts/default.json'
@@ -233,6 +234,7 @@ class App extends React.Component {
             defaultLayoutValue={this.state.layout}
             layoutOptions={Object.keys(this.layouts)}
           />
+          <Info />
         </Container>
       </div>
     )
