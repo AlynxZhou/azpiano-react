@@ -26,6 +26,12 @@ class AudioPlayer {
     this.sources[id].stop(this.context.currentTime + this.stopDelay)
     delete this.sources[id]
   }
+
+  pauseAll() {
+    for (const id in this.sources) {
+      this.pause(id)
+    }
+  }
 }
 
 export default AudioPlayer

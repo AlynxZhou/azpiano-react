@@ -75,11 +75,19 @@ class App extends React.Component {
     })
     document.addEventListener('keydown', this.onKeyDown.bind(this))
     document.addEventListener('keyup', this.onKeyUp.bind(this))
+    document.addEventListener(
+      'visibilitychange',
+      this.onVisibilityChange.bind(this)
+    )
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onKeyDown.bind(this))
     document.removeEventListener('keyup', this.onKeyUp.bind(this))
+    document.removeEventListener(
+      'visibilitychange',
+      this.onVisibilityChange.bind(this)
+    )
   }
 
   updateQueryString() {
@@ -100,6 +108,15 @@ class App extends React.Component {
       for (const grid of row) {
         this.codesNotes[grid[0]] = grid[1]
       }
+    }
+  }
+
+  onVisibilityChange(event) {
+    // Typically no keyup event is send when user switch tabs.
+    // So we clear state manually.
+    if (document.visibilityState !== 'visible') {
+      this.player.pauseAll()
+      this.setState({'mapState': {}})
     }
   }
 
