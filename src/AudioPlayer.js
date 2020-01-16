@@ -1,3 +1,5 @@
+const AudioContext = window.AudioContext || window.webkitAudioContext
+
 class AudioPlayer {
   constructor(opts = {}) {
     this.context = new AudioContext()

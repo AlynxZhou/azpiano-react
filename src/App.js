@@ -57,7 +57,7 @@ class App extends React.Component {
     import('./notesBuffers.json').then((module) => {
       const notesBuffers = module.default
       const totalLength = Object.keys(notesBuffers).length
-      for (const k in notesBuffers) {
+      for (const k of Object.keys(notesBuffers)) {
         this.player.decodeAudioData(this.decoder.decode(
           notesBuffers[k].substring(OGG_HEADER_LENGTH)
         ), (buffer) => {
