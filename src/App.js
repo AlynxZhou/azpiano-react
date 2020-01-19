@@ -12,6 +12,7 @@ import notesDigits from './notesDigits.json'
 import './App.css'
 import Container from '@material-ui/core/Container'
 import Paper from '@material-ui/core/Paper'
+import Button from '@material-ui/core/Button'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 const OGG_HEADER_LENGTH = 'data:audio/ogg;base64,'.length
@@ -19,7 +20,6 @@ const OGG_HEADER_LENGTH = 'data:audio/ogg;base64,'.length
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.player = new AudioPlayer()
     this.decoder = new Base64Decoder()
     this.searchParams = new URLSearchParams(window.location.search)
     this.layouts = {
@@ -29,6 +29,7 @@ class App extends React.Component {
     }
     this.displayOptions = ['digit', 'note']
     this.state = {
+      'start': false,
       'ready': false,
       'percent': 0,
       'logState': [],
@@ -53,26 +54,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // Webpack trunked loading.
-    import('./notesBuffers.json').then((module) => {
-      const notesBuffers = module.default
-      const totalLength = Object.keys(notesBuffers).length
-      for (const k of Object.keys(notesBuffers)) {
-        this.player.decodeAudioData(this.decoder.decode(
-          notesBuffers[k].substring(OGG_HEADER_LENGTH)
-        ), (buffer) => {
-          this.notesBuffers[k] = buffer
-          if (!this.state.ready) {
-            this.setState({
-              'percent': Math.round(
-                Object.keys(this.notesBuffers).length * 100 / totalLength
-              ),
-              'ready': Object.keys(this.notesBuffers).length === totalLength
-            })
-          }
-        })
-      }
-    })
     document.addEventListener('keydown', this.onKeyDown.bind(this))
     document.addEventListener('keyup', this.onKeyUp.bind(this))
     document.addEventListener(
@@ -122,6 +103,12 @@ class App extends React.Component {
 
   onKeyDown(event) {
     event.preventDefault()
+    // "Press Any Key to Start"!
+    // Ah, in fact, not any key.
+    if (!this.state.ready) {
+      this.onStartClick()
+      return
+    }
     switch (event.code) {
       case 'F1':
         this.onSwitchChange()
@@ -239,7 +226,56 @@ class App extends React.Component {
     this.updateLayout()
   }
 
+  onStartClick() {
+    // Oh I hate Chromium!
+    // Why I can only create AudioPlayer after user action?
+    this.setState({'start': true})
+    this.player = new AudioPlayer()
+    // Webpack trunked loading.
+    import('./notesBuffers.json').then(({'default': notesBuffers}) => {
+      const totalLength = Object.keys(notesBuffers).length
+      for (const k of Object.keys(notesBuffers)) {
+        this.player.decodeAudioData(this.decoder.decode(
+          notesBuffers[k].substring(OGG_HEADER_LENGTH)
+        ), (buffer) => {
+          this.notesBuffers[k] = buffer
+          if (!this.state.ready) {
+            this.setState({
+              'percent': Math.round(
+                Object.keys(this.notesBuffers).length * 100 / totalLength
+              ),
+              'ready': Object.keys(this.notesBuffers).length === totalLength
+            })
+          }
+        })
+      }
+    })
+  }
+
   render() {
+    // So if user has gone to toliet,
+    // we need to wait, too.
+    if (!this.state.start) {
+      return (
+        <div className="app">
+          <Container maxWidth="xl">
+            <div className="loading">
+              <Paper>
+                <div className="loading-inner">
+                  <div className="loading-item">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={this.onStartClick.bind(this)}
+                    >Press Any Key to Start</Button>
+                  </div>
+                </div>
+              </Paper>
+            </div>
+          </Container>
+        </div>
+      )
+    }
     if (!this.state.ready) {
       return (
         <div className="app">

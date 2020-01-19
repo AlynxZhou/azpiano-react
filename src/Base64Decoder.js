@@ -30,9 +30,9 @@ class Base64Decoder {
       enc3 = this.keyStr.indexOf(input.charAt(j++))
       enc4 = this.keyStr.indexOf(input.charAt(j++))
 
-      chr1 = (enc1 << 2) | (enc2 >> 4);
-      chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-      chr3 = ((enc3 & 3) << 6) | enc4;
+      chr1 = (enc1 << 2) | (enc2 >> 4)
+      chr2 = ((enc2 & 15) << 4) | (enc3 >> 2)
+      chr3 = ((enc3 & 3) << 6) | enc4
 
       uarray[i] = chr1;
       if (enc3 !== 64) {
