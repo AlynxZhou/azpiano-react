@@ -14,9 +14,9 @@ class Log extends React.Component {
           <div className="log-inner">
             <div className="log-text">
               <TextField
-                defaultValue={this.props.state.join('')}
+                value={`${this.props.state.join('')}_`}
                 variant="outlined"
-                InputProps={{readOnly: true}}
+                InputProps={{'readOnly': true}}
                 fullWidth
                 rows="8"
                 multiline
