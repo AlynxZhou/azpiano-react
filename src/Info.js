@@ -9,7 +9,7 @@ class Info extends React.Component {
 				<Paper>
 					<div className="info-inner">
 						<div>Star or fork on <a href="https://github.com/AlynxZhou/azpiano-react/" target="_blank" rel="noreferrer noopener">GitHub</a>.</div>
-						<div>Welcome to <a href="https://alynx.moe/" target="_blank" rel="noreferrer noopener">Alynx Zhou's Homepage</a>.</div>
+						<div>Welcome to <a href="https://alynx.one/" target="_blank" rel="noreferrer noopener">Alynx Zhou's Homepage</a>.</div>
 					</div>
 				</Paper>
 			</div>
