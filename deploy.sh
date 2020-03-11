@@ -4,7 +4,7 @@ npm run build
 
 rm -rf docs
 cp -r build docs
-echo 'piano.alynx.moe' > docs/CNAME
+echo 'piano.alynx.one' > docs/CNAME
 
 git add --all
 git commit --message "Updated site."
