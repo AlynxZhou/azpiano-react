@@ -19,7 +19,30 @@ class Block extends React.Component {
 
 class Map extends React.Component {
   renderBlock(block, y, x, length) {
-    const display = this.props.displayParam === 'digit'
+    let upper = codesChars[block[0]]
+    // Japanese are so strange, their key codes differ from characters...
+    if (this.props.layoutParam === 'jp') {
+      switch (block[0]) {
+        case 'Equal':
+          upper = '^'
+          break
+        case 'BracketLeft':
+          upper = '@'
+          break
+        case 'BracketRight':
+          upper = '['
+          break
+        case 'Quote':
+          upper = ':'
+          break
+        case 'Backslash':
+          upper = ']'
+          break
+        default:
+          break
+      }
+    }
+    const lower = this.props.displayParam === 'digit'
       ? notesDigits[block[1]]
       : block[1]
     /**
@@ -34,8 +57,8 @@ class Map extends React.Component {
         return (
           <Grid item xs={2} key={y}>
             <Block
-              upper={codesChars[block[0]]}
-              lower={display}
+              upper={upper}
+              lower={lower}
               pressed={this.props.state[block[0]]}
             />
           </Grid>
@@ -45,8 +68,8 @@ class Map extends React.Component {
         return (
           <Grid item xs={4} key={y}>
             <Block
-              upper={codesChars[block[0]]}
-              lower={display}
+              upper={upper}
+              lower={lower}
               pressed={this.props.state[block[0]]}
             />
           </Grid>
@@ -57,8 +80,8 @@ class Map extends React.Component {
       return (
         <Grid item xs={3} key={y}>
           <Block
-            upper={codesChars[block[0]]}
-            lower={display}
+            upper={upper}
+            lower={lower}
             pressed={this.props.state[block[0]]}
           />
         </Grid>
@@ -69,8 +92,8 @@ class Map extends React.Component {
         return (
           <Grid item xs={4} key={y}>
             <Block
-              upper={codesChars[block[0]]}
-              lower={display}
+              upper={upper}
+              lower={lower}
               pressed={this.props.state[block[0]]}
               />
           </Grid>
@@ -80,8 +103,8 @@ class Map extends React.Component {
         return (
           <Grid item xs={3} key={y}>
             <Block
-              upper={codesChars[block[0]]}
-              lower={display}
+              upper={upper}
+              lower={lower}
               pressed={this.props.state[block[0]]}
             />
           </Grid>
@@ -92,8 +115,8 @@ class Map extends React.Component {
       return (
         <Grid item xs={3} key={y}>
           <Block
-            upper={codesChars[block[0]]}
-            lower={display}
+            upper={upper}
+            lower={lower}
             pressed={this.props.state[block[0]]}
           />
         </Grid>
@@ -104,8 +127,8 @@ class Map extends React.Component {
         return (
           <Grid item xs={3} key={y}>
             <Block
-              upper={codesChars[block[0]]}
-              lower={display}
+              upper={upper}
+              lower={lower}
               pressed={this.props.state[block[0]]}
             />
           </Grid>
@@ -114,8 +137,8 @@ class Map extends React.Component {
         return (
           <Grid item xs={4} key={y}>
             <Block
-              upper={codesChars[block[0]]}
-              lower={display}
+              upper={upper}
+              lower={lower}
               pressed={this.props.state[block[0]]}
             />
           </Grid>
@@ -126,8 +149,8 @@ class Map extends React.Component {
       return (
         <Grid item xs={3} key={y}>
           <Block
-            upper={codesChars[block[0]]}
-            lower={display}
+            upper={upper}
+            lower={lower}
             pressed={this.props.state[block[0]]}
           />
         </Grid>
@@ -137,8 +160,8 @@ class Map extends React.Component {
       return (
         <Grid item xs={4} key={y}>
           <Block
-            upper={codesChars[block[0]]}
-            lower={display}
+            upper={upper}
+            lower={lower}
             pressed={this.props.state[block[0]]}
           />
         </Grid>
@@ -148,8 +171,8 @@ class Map extends React.Component {
       return (
         <Grid item xs={6} key={y}>
           <Block
-            upper={codesChars[block[0]]}
-            lower={display}
+            upper={upper}
+            lower={lower}
             pressed={this.props.state[block[0]]}
           />
         </Grid>
@@ -159,8 +182,8 @@ class Map extends React.Component {
     return (
       <Grid item xs={2} key={y}>
         <Block
-          upper={codesChars[block[0]]}
-          lower={display}
+          upper={upper}
+          lower={lower}
           pressed={this.props.state[block[0]]}
         />
       </Grid>
