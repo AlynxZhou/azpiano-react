@@ -9,6 +9,7 @@ import defaultLayout from './layouts/default.json'
 import ctrlcapsLayout from './layouts/ctrlcaps.json'
 import hhkbLayout from './layouts/hhkb.json'
 import jpLayout from './layouts/jp.json'
+import dvorakLayout from './layouts/dvorak.json'
 import notesDigits from './notesDigits.json'
 import './App.css'
 import Container from '@material-ui/core/Container'
@@ -27,7 +28,8 @@ class App extends React.Component {
       'default': defaultLayout,
       'ctrlcaps': ctrlcapsLayout,
       'hhkb': hhkbLayout,
-      'jp': jpLayout
+      'jp': jpLayout,
+      'dvorak': dvorakLayout
     }
     this.displayOptions = ['digit', 'note']
     this.state = {

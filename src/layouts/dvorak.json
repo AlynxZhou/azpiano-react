@@ -1,0 +1,7 @@
+[
+  [["Backquote", "B2"], ["Digit1", "C3"], ["Digit2", "Db3"], ["Digit3", "D3"], ["Digit4", "Eb3"], ["Digit5", "E3"], ["Digit6", "F3"], ["Digit7", "Gb3"], ["Digit8", "G3"], ["Digit9", "Ab3"], ["Digit0", "A3"], ["BracketLeft", "Bb3"], ["BracketRight", "B3"], ["Backspace", "C4"]],
+  [["Tab", "B3"], ["Quote", "C4"], ["Comma", "Db4"], ["Period", "D4"], ["KeyP", "Eb4"], ["KeyY", "E4"], ["KeyF", "F4"], ["KeyG", "Gb4"], ["KeyC", "G4"], ["KeyR", "Ab4"], ["KeyL", "A4"], ["Slash", "Bb4"], ["Equal", "B4"], ["Backslash", "C5"]],
+  [["CapsLock", "B4"], ["KeyA", "C5"], ["KeyO", "Db5"], ["KeyE", "D5"], ["KeyU", "Eb5"], ["KeyI", "E5"], ["KeyD", "F5"], ["KeyH", "Gb5"], ["KeyT", "G5"], ["KeyN", "Ab5"], ["KeyS", "A5"], ["Minus", "Bb5"], ["Enter", "B5"]],
+  [["ShiftLeft", "B5"], ["Semicolon", "C6"], ["KeyQ", "Db6"], ["KeyJ", "D6"], ["KeyK", "Eb6"], ["KeyX", "E6"], ["KeyB", "F6"], ["KeyM", "Gb6"], ["KeyW", "G6"], ["KeyV", "Ab6"], ["KeyZ", "A6"], ["ShiftRight", "Bb6"]],
+  [["Space", "B6"]]
+]
