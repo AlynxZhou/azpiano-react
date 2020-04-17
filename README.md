@@ -4,7 +4,7 @@ AZPiano-React
 A piano liked app that record your keyboard typing as notes.
 ------------------------------------------------------------
 
-Demo: <https://piano.alynx.moe/>
+Demo: <https://piano.alynx.one/>
 
 Require Web Audio API support.
 
