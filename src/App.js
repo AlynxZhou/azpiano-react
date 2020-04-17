@@ -8,6 +8,7 @@ import Base64Decoder from './Base64Decoder'
 import defaultLayout from './layouts/default.json'
 import ctrlcapsLayout from './layouts/ctrlcaps.json'
 import hhkbLayout from './layouts/hhkb.json'
+import jpLayout from './layouts/jp.json'
 import notesDigits from './notesDigits.json'
 import './App.css'
 import Container from '@material-ui/core/Container'
@@ -22,10 +23,11 @@ class App extends React.Component {
     super(props)
     this.decoder = new Base64Decoder()
     this.searchParams = new URLSearchParams(window.location.search)
-    this.layouts = {
+    this.mapLayouts = {
       'default': defaultLayout,
       'ctrlcaps': ctrlcapsLayout,
-      'hhkb': hhkbLayout
+      'hhkb': hhkbLayout,
+      'jp': jpLayout
     }
     this.displayOptions = ['digit', 'note']
     this.state = {
@@ -35,18 +37,18 @@ class App extends React.Component {
       'logState': [],
       'logEnabled': true,
       'mapState': {},
-      'display': this.searchParams.has('display') &&
+      'displayParam': this.searchParams.has('display') &&
         this.displayOptions.indexOf(this.searchParams.get('display')) !== -1
         ? this.searchParams.get('display')
         : 'digit',
-      'layout': this.searchParams.has('layout') &&
-        this.layouts[this.searchParams.get('layout')] != null
+      'layoutParam': this.searchParams.has('layout') &&
+        this.mapLayouts[this.searchParams.get('layout')] != null
         ? this.searchParams.get('layout')
         : 'default'
     }
     // Don't use state to store layout, it's **async**!
-    this.layout = this.layouts[this.state.layout]
-    this.updateLayout()
+    this.mapLayout = this.mapLayouts[this.state.layoutParam]
+    this.updateMapLayout()
 
     this.notesBuffers = {}
 
@@ -83,9 +85,9 @@ class App extends React.Component {
     window.history.replaceState({'path': newPath}, '', newPath);
   }
 
-  updateLayout() {
+  updateMapLayout() {
     this.codesNotes = {}
-    for (const row of this.layout) {
+    for (const row of this.mapLayout) {
       for (const grid of row) {
         this.codesNotes[grid[0]] = grid[1]
       }
@@ -211,19 +213,19 @@ class App extends React.Component {
   }
 
   onDisplayChange(event) {
-    this.setState({'display': event.target.value})
+    this.setState({'displayParam': event.target.value})
     this.searchParams.set('display', event.target.value)
     this.updateQueryString()
   }
 
   onLayoutChange(event) {
     // setState is only used for re-trigger rendering.
-    this.setState({'layout': event.target.value})
+    this.setState({'layoutParam': event.target.value})
     this.searchParams.set('layout', event.target.value)
     this.updateQueryString()
     // Don't use state to update layout, it's **async**!
-    this.layout = this.layouts[event.target.value]
-    this.updateLayout()
+    this.mapLayout = this.mapLayouts[event.target.value]
+    this.updateMapLayout()
   }
 
   onStartClick() {
@@ -304,9 +306,10 @@ class App extends React.Component {
       <div className="app">
         <Container maxWidth="xl">
           <Map
-            layout={this.layout}
+            layout={this.mapLayout}
             state={this.state.mapState}
-            display={this.state.display}
+            layoutParam={this.state.layoutParam}
+            displayParam={this.state.displayParam}
           />
           <Log
             onSwitchChange={this.onSwitchChange.bind(this)}
@@ -321,10 +324,10 @@ class App extends React.Component {
           <Settings
             onDisplayChange={this.onDisplayChange.bind(this)}
             onLayoutChange={this.onLayoutChange.bind(this)}
-            defaultDisplayValue={this.state.display}
+            defaultDisplayValue={this.state.displayParam}
             displayOptions={this.displayOptions}
-            defaultLayoutValue={this.state.layout}
-            layoutOptions={Object.keys(this.layouts)}
+            defaultLayoutValue={this.state.layoutParam}
+            layoutOptions={Object.keys(this.mapLayouts)}
           />
           <Info />
         </Container>

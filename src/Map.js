@@ -19,7 +19,7 @@ class Block extends React.Component {
 
 class Map extends React.Component {
   renderBlock(block, y, x, length) {
-    const display = this.props.display === 'digit'
+    const display = this.props.displayParam === 'digit'
       ? notesDigits[block[1]]
       : block[1]
     /**
@@ -29,16 +29,29 @@ class Map extends React.Component {
      * it is hard because I need to take them apart with copy & paste.
      */
     if (x === 0 && y === length - 1) {
-      // Backspace.
-      return (
-        <Grid item xs={4} key={y}>
-          <Block
-            upper={codesChars[block[0]]}
-            lower={display}
-            pressed={this.props.state[block[0]]}
-          />
-        </Grid>
-      )
+      if (this.props.layoutParam === 'hhkb') {
+        // Backquote.
+        return (
+          <Grid item xs={2} key={y}>
+            <Block
+              upper={codesChars[block[0]]}
+              lower={display}
+              pressed={this.props.state[block[0]]}
+            />
+          </Grid>
+        )
+      } else {
+        // Backspace.
+        return (
+          <Grid item xs={4} key={y}>
+            <Block
+              upper={codesChars[block[0]]}
+              lower={display}
+              pressed={this.props.state[block[0]]}
+            />
+          </Grid>
+        )
+      }
     } else if (x === 1 && y === 0) {
       // Tab.
       return (
@@ -51,16 +64,29 @@ class Map extends React.Component {
         </Grid>
       )
     } else if (x === 1 && y === length - 1) {
-      // Backslash.
-      return (
-        <Grid item xs={3} key={y}>
-          <Block
-            upper={codesChars[block[0]]}
-            lower={display}
-            pressed={this.props.state[block[0]]}
-          />
-        </Grid>
-      )
+      if (this.props.layoutParam === 'jp') {
+        // Enter.
+        return (
+          <Grid item xs={4} key={y}>
+            <Block
+              upper={codesChars[block[0]]}
+              lower={display}
+              pressed={this.props.state[block[0]]}
+              />
+          </Grid>
+        )
+      } else {
+        // Backslash.
+        return (
+          <Grid item xs={3} key={y}>
+            <Block
+              upper={codesChars[block[0]]}
+              lower={display}
+              pressed={this.props.state[block[0]]}
+            />
+          </Grid>
+        )
+      }
     } else if (x === 2 && y === 0) {
       // CapsLock.
       return (
@@ -74,15 +100,27 @@ class Map extends React.Component {
       )
     } else if (x === 2 && y === length - 1) {
       // Enter.
-      return (
-        <Grid item xs={4} key={y}>
-          <Block
-            upper={codesChars[block[0]]}
-            lower={display}
-            pressed={this.props.state[block[0]]}
-          />
-        </Grid>
-      )
+      if (this.props.layoutParam === 'jp') {
+        return (
+          <Grid item xs={3} key={y}>
+            <Block
+              upper={codesChars[block[0]]}
+              lower={display}
+              pressed={this.props.state[block[0]]}
+            />
+          </Grid>
+        )
+      } else {
+        return (
+          <Grid item xs={4} key={y}>
+            <Block
+              upper={codesChars[block[0]]}
+              lower={display}
+              pressed={this.props.state[block[0]]}
+            />
+          </Grid>
+        )
+      }
     } else if (x === 3 && y === 0) {
       // ShiftLeft.
       return (
