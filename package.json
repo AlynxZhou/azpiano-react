@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/AlynxZhou/azpiano-react/issues"
   },
-  "homepage": "https://piano.alynx.one/",
+  "homepage": "./",
   "author": "Alynx Zhou <alynx.zhou@gmail.com> (https://alynx.one/)",
   "license": "Apache-2.0",
   "eslintConfig": {
