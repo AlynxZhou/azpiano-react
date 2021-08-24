@@ -14,7 +14,11 @@ class Log extends React.Component {
           <div className="log-inner">
             <div className="log-text">
               <TextField
-                value={`${this.props.state.join('')}_`}
+                value={
+                  this.props.outputMode === "digit"
+                    ? this.props.state.join('')
+                    : this.props.state.join(' ')
+                }
                 variant="outlined"
                 InputProps={{'readOnly': true}}
                 fullWidth

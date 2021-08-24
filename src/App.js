@@ -11,6 +11,7 @@ import hhkbLayout from './layouts/hhkb.json'
 import jpLayout from './layouts/jp.json'
 import dvorakLayout from './layouts/dvorak.json'
 import notesDigits from './notesDigits.json'
+import notesLily from './notesLily.json'
 import './App.css'
 import Container from '@material-ui/core/Container'
 import Paper from '@material-ui/core/Paper'
@@ -32,6 +33,7 @@ class App extends React.Component {
       'dvorak': dvorakLayout
     }
     this.displayOptions = ['digit', 'note']
+    this.outputOptions = ['digit', 'lilypond-is', 'lilypond-es']
     this.state = {
       'start': false,
       'ready': false,
@@ -42,6 +44,10 @@ class App extends React.Component {
       'displayParam': this.searchParams.has('display') &&
         this.displayOptions.indexOf(this.searchParams.get('display')) !== -1
         ? this.searchParams.get('display')
+        : 'digit',
+      'outputParam': this.searchParams.has('output') &&
+        this.outputOptions.indexOf(this.searchParams.get('output')) !== -1
+        ? this.searchParams.get('output')
         : 'digit',
       'layoutParam': this.searchParams.has('layout') &&
         this.mapLayouts[this.searchParams.get('layout')] != null
@@ -55,6 +61,7 @@ class App extends React.Component {
     this.notesBuffers = {}
 
     this.notesDigits = notesDigits
+    this.notesLily = notesLily
   }
 
   componentDidMount() {
@@ -143,7 +150,11 @@ class App extends React.Component {
     const {logState, mapState} = this.state
     mapState[code] = true
     if (this.state.logEnabled && this.state.ready) {
-      logState.push(this.notesDigits[note])
+      logState.push(
+        this.state.outputParam === "digit"
+          ? this.notesDigits[note]
+          : this.notesLily[this.state.outputParam][note]
+      )
     }
     this.setState({logState, mapState})
     this.player.play(note, this.notesBuffers[note])
@@ -217,6 +228,12 @@ class App extends React.Component {
   onDisplayChange(event) {
     this.setState({'displayParam': event.target.value})
     this.searchParams.set('display', event.target.value)
+    this.updateQueryString()
+  }
+
+  onOutputChange(event) {
+    this.setState({'outputParam': event.target.value})
+    this.searchParams.set('output', event.target.value)
     this.updateQueryString()
   }
 
@@ -320,14 +337,18 @@ class App extends React.Component {
             onReturnClick={this.onReturnClick.bind(this)}
             onClearClick={this.onClearClick.bind(this)}
             onCopyClick={this.onCopyClick.bind(this)}
+            outputMode={this.state.outputParam}
             state={this.state.logState}
             enabled={this.state.logEnabled}
           />
           <Settings
             onDisplayChange={this.onDisplayChange.bind(this)}
+            onOutputChange={this.onOutputChange.bind(this)}
             onLayoutChange={this.onLayoutChange.bind(this)}
             defaultDisplayValue={this.state.displayParam}
             displayOptions={this.displayOptions}
+            defaultOutputValue={this.state.outputParam}
+            outputOptions={this.outputOptions}
             defaultLayoutValue={this.state.layoutParam}
             layoutOptions={Object.keys(this.mapLayouts)}
           />

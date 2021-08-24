@@ -30,6 +30,22 @@ class Settings extends React.Component {
             </div>
             <div className="settings-item">
               <FormControl fullWidth>
+                <InputLabel id="output">Output</InputLabel>
+                <Select
+                  labelId="output"
+                  defaultValue={this.props.defaultOutputValue}
+                  onChange={this.props.onOutputChange}
+                >
+                  {this.props.outputOptions.map((option, index) => {
+                    return (
+                      <MenuItem key={index} value={option}>{option}</MenuItem>
+                    )
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+            <div className="settings-item">
+              <FormControl fullWidth>
                 <InputLabel id="layout">Layout</InputLabel>
                 <Select
                   labelId="layout"
