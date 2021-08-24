@@ -7,6 +7,18 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import './Log.css'
 
 class Log extends React.Component {
+  constructor(props) {
+    super(props);
+    // Ref is needed to access DOM.
+    this.textRef = React.createRef()
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // Scroll to bottom on every updates.
+    // Use current because we want to modify current status.
+    this.textRef.current.scrollTop = this.textRef.current.scrollHeight
+  }
+
   render() {
     return (
       <div className="log">
@@ -20,7 +32,9 @@ class Log extends React.Component {
                     : this.props.state.join(' ')
                 }
                 variant="outlined"
-                InputProps={{'readOnly': true}}
+                inputProps={{"readOnly": true}}
+                // Pass ref to textarea.
+                inputRef={this.textRef}
                 fullWidth
                 rows="8"
                 multiline
