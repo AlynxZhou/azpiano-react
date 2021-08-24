@@ -1,0 +1,37 @@
+{
+  "env": {
+    "node": true,
+    "es2017": true,
+    "mocha": true
+  },
+  "parser": "babel-eslint",
+  "extends": ["standard", "standard-jsx", "standard-react"],
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": ["error", "double", {"avoidEscape": false}],
+    "space-before-function-paren": ["error", {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+    "generator-star-spacing": ["error", "before"],
+    "block-spacing": ["error", "never"],
+    "object-curly-spacing": ["error", "never"],
+    "array-bracket-spacing": ["error", "never"],
+    "quote-props": ["error", "always"],
+    "dot-notation": "off",
+    "max-len": ["error", {
+      "code": 80,
+      "ignoreComments": true,
+      "ignoreTrailingComments": false,
+      "ignoreUrls": true,
+      "ignoreStrings": false,
+      "ignoreTemplateLiterals": false,
+      "ignoreRegExpLiterals": false
+    }],
+    "react/prop-types": "off"
+  }
+}

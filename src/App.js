@@ -1,276 +1,287 @@
-import React from 'react'
-import Map from './Map'
-import Log from './Log'
-import Settings from './Settings'
-import Info from './Info'
-import AudioPlayer from './AudioPlayer'
-import Base64Decoder from './Base64Decoder'
-import defaultLayout from './layouts/default.json'
-import ctrlcapsLayout from './layouts/ctrlcaps.json'
-import hhkbLayout from './layouts/hhkb.json'
-import jpLayout from './layouts/jp.json'
-import dvorakLayout from './layouts/dvorak.json'
-import notesDigits from './notesDigits.json'
-import notesLily from './notesLily.json'
-import './App.css'
-import Container from '@material-ui/core/Container'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import React from "react";
+import Map from "./Map";
+import Log from "./Log";
+import Settings from "./Settings";
+import Info from "./Info";
+import AudioPlayer from "./AudioPlayer";
+import Base64Decoder from "./Base64Decoder";
+import defaultLayout from "./layouts/default.json";
+import ctrlcapsLayout from "./layouts/ctrlcaps.json";
+import hhkbLayout from "./layouts/hhkb.json";
+import jpLayout from "./layouts/jp.json";
+import dvorakLayout from "./layouts/dvorak.json";
+import notesDigits from "./notesDigits.json";
+import notesLily from "./notesLily.json";
+import "./App.css";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
-const OGG_HEADER_LENGTH = 'data:audio/ogg;base64,'.length
+const OGG_HEADER_LENGTH = "data:audio/ogg;base64,".length;
 
 class App extends React.Component {
   constructor(props) {
-    super(props)
-    this.decoder = new Base64Decoder()
-    this.searchParams = new URLSearchParams(window.location.search)
+    super(props);
+    this.decoder = new Base64Decoder();
+    this.searchParams = new URLSearchParams(window.location.search);
     this.mapLayouts = {
-      'default': defaultLayout,
-      'ctrlcaps': ctrlcapsLayout,
-      'hhkb': hhkbLayout,
-      'jp': jpLayout,
-      'dvorak': dvorakLayout
-    }
-    this.displayOptions = ['digit', 'note']
-    this.outputOptions = ['digit', 'lilypond-is', 'lilypond-es']
+      "default": defaultLayout,
+      "ctrlcaps": ctrlcapsLayout,
+      "hhkb": hhkbLayout,
+      "jp": jpLayout,
+      "dvorak": dvorakLayout
+    };
+    this.displayOptions = ["digit", "note"];
+    this.outputOptions = ["digit", "lilypond-is", "lilypond-es"];
     this.state = {
-      'start': false,
-      'ready': false,
-      'percent': 0,
-      'logState': [],
-      'logEnabled': true,
-      'mapState': {},
-      'displayParam': this.searchParams.has('display') &&
-        this.displayOptions.indexOf(this.searchParams.get('display')) !== -1
-        ? this.searchParams.get('display')
-        : 'digit',
-      'outputParam': this.searchParams.has('output') &&
-        this.outputOptions.indexOf(this.searchParams.get('output')) !== -1
-        ? this.searchParams.get('output')
-        : 'digit',
-      'layoutParam': this.searchParams.has('layout') &&
-        this.mapLayouts[this.searchParams.get('layout')] != null
-        ? this.searchParams.get('layout')
-        : 'default'
-    }
+      "start": false,
+      "ready": false,
+      "percent": 0,
+      "logState": [],
+      "logEnabled": true,
+      "mapState": {},
+      "displayParam": this.searchParams.has("display") &&
+        this.displayOptions.indexOf(this.searchParams.get("display")) !== -1
+        ? this.searchParams.get("display")
+        : "digit",
+      "outputParam": this.searchParams.has("output") &&
+        this.outputOptions.indexOf(this.searchParams.get("output")) !== -1
+        ? this.searchParams.get("output")
+        : "digit",
+      "layoutParam": this.searchParams.has("layout") &&
+        this.mapLayouts[this.searchParams.get("layout")] != null
+        ? this.searchParams.get("layout")
+        : "default"
+    };
     // Don't use state to store layout, it's **async**!
-    this.mapLayout = this.mapLayouts[this.state.layoutParam]
-    this.updateMapLayout()
+    this.mapLayout = this.mapLayouts[this.state.layoutParam];
+    this.updateMapLayout();
 
-    this.notesBuffers = {}
+    this.notesBuffers = {};
 
-    this.notesDigits = notesDigits
-    this.notesLily = notesLily
+    this.notesDigits = notesDigits;
+    this.notesLily = notesLily;
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    this.handleStartClick = this.handleStartClick.bind(this);
+    this.handleSwitchChange = this.handleSwitchChange.bind(this);
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleSpaceClick = this.handleSpaceClick.bind(this);
+    this.handleReturnClick = this.handleReturnClick.bind(this);
+    this.handleClearClick = this.handleClearClick.bind(this);
+    this.handleCopyClick = this.handleCopyClick.bind(this);
+    this.handleDisplayChange = this.handleDisplayChange.bind(this);
+    this.handleOutputChange = this.handleOutputChange.bind(this);
+    this.handleLayoutChange = this.handleLayoutChange.bind(this);
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.onKeyDown.bind(this))
-    document.addEventListener('keyup', this.onKeyUp.bind(this))
-    document.addEventListener(
-      'visibilitychange',
-      this.onVisibilityChange.bind(this)
-    )
+    document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("keyup", this.handleKeyUp);
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.onKeyDown.bind(this))
-    document.removeEventListener('keyup', this.onKeyUp.bind(this))
+    document.removeEventListener("keydown", this.handleKeyDown);
+    document.removeEventListener("keyup", this.handleKeyUp);
     document.removeEventListener(
-      'visibilitychange',
-      this.onVisibilityChange.bind(this)
-    )
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
   }
 
   updateQueryString() {
     const newPath = [
       window.location.protocol,
-      '//',
+      "//",
       window.location.host,
       window.location.pathname,
-      '?',
+      "?",
       this.searchParams.toString()
-    ].join('')
-    window.history.replaceState({'path': newPath}, '', newPath);
+    ].join("");
+    window.history.replaceState({"path": newPath}, "", newPath);
   }
 
   updateMapLayout() {
-    this.codesNotes = {}
+    this.codesNotes = {};
     for (const row of this.mapLayout) {
       for (const grid of row) {
-        this.codesNotes[grid[0]] = grid[1]
+        this.codesNotes[grid[0]] = grid[1];
       }
     }
   }
 
-  onVisibilityChange(event) {
+  handleVisibilityChange(event) {
     // Typically no keyup event is send when user switch tabs.
     // So we clear state manually.
-    if (document.visibilityState !== 'visible') {
-      this.player.pauseAll()
-      this.setState({'mapState': {}})
+    if (document.visibilityState !== "visible") {
+      this.player.pauseAll();
+      this.setState({"mapState": {}});
     }
   }
 
-  onKeyDown(event) {
-    event.preventDefault()
+  handleKeyDown(event) {
+    event.preventDefault();
     // "Press Any Key to Start"!
     // Ah, in fact, not any key.
     if (!this.state.ready) {
-      this.onStartClick()
-      return
+      this.onStartClick();
+      return;
     }
     switch (event.code) {
-      case 'F1':
-        this.onSwitchChange()
-        return
-      case 'F2':
-        this.onSpaceClick()
-        return
-      case 'F3':
-        this.onReturnClick()
-        return
-      case 'F4':
-        this.onDeleteClick()
-        return
-      case 'F5':
-        this.onClearClick()
-        return
-      case 'F6':
-        this.onCopyClick()
-        return
+      case "F1":
+        this.onSwitchChange();
+        return;
+      case "F2":
+        this.onSpaceClick();
+        return;
+      case "F3":
+        this.onReturnClick();
+        return;
+      case "F4":
+        this.onDeleteClick();
+        return;
+      case "F5":
+        this.onClearClick();
+        return;
+      case "F6":
+        this.onCopyClick();
+        return;
       default:
-        break
+        break;
     }
     if (event.repeat || this.codesNotes[event.code] == null) {
-      return
+      return;
     }
-    const code = event.code
-    const note = this.codesNotes[code]
-    const {logState, mapState} = this.state
-    mapState[code] = true
+    const code = event.code;
+    const note = this.codesNotes[code];
+    const {logState, mapState} = this.state;
+    mapState[code] = true;
     if (this.state.logEnabled && this.state.ready) {
       logState.push(
         this.state.outputParam === "digit"
           ? this.notesDigits[note]
           : this.notesLily[this.state.outputParam][note]
-      )
+      );
     }
-    this.setState({logState, mapState})
-    this.player.play(note, this.notesBuffers[note])
+    this.setState({logState, mapState});
+    this.player.play(note, this.notesBuffers[note]);
   }
 
-  onKeyUp(event) {
-    event.preventDefault()
+  handleKeyUp(event) {
+    event.preventDefault();
     if (event.repeat || this.codesNotes[event.code] == null) {
-      return
+      return;
     }
-    const code = event.code
-    const note = this.codesNotes[code]
-    const {mapState} = this.state
-    mapState[code] = false
-    this.setState({mapState})
-    this.player.pause(note)
+    const code = event.code;
+    const note = this.codesNotes[code];
+    const {mapState} = this.state;
+    mapState[code] = false;
+    this.setState({mapState});
+    this.player.pause(note);
   }
 
-  onSwitchChange(event) {
+  handleSwitchChange(event) {
     if (event == null) {
-      const {logEnabled} = this.state
-      this.setState({'logEnabled': !logEnabled})
-      return
+      const {logEnabled} = this.state;
+      this.setState({"logEnabled": !logEnabled});
+      return;
     }
-    this.setState({'logEnabled': event.target.checked})
+    this.setState({"logEnabled": event.target.checked});
   }
 
-  onDeleteClick() {
+  handleDeleteClick() {
     if (!this.state.logEnabled) {
-      return
+      return;
     }
-    const {logState} = this.state
-    logState.pop()
-    this.setState({logState})
+    const {logState} = this.state;
+    logState.pop();
+    this.setState({logState});
   }
 
-  onSpaceClick() {
+  handleSpaceClick() {
     if (!this.state.logEnabled) {
-      return
+      return;
     }
-    const {logState} = this.state
-    logState.push(' ')
-    this.setState({logState})
+    const {logState} = this.state;
+    logState.push(" ");
+    this.setState({logState});
   }
 
-  onReturnClick() {
+  handleReturnClick() {
     if (!this.state.logEnabled) {
-      return
+      return;
     }
-    const {logState} = this.state
-    logState.push('\n')
-    this.setState({logState})
+    const {logState} = this.state;
+    logState.push("\n");
+    this.setState({logState});
   }
 
-  onClearClick() {
-    let {logState} = this.state
-    logState = []
-    this.setState({logState})
+  handleClearClick() {
+    let {logState} = this.state;
+    logState = [];
+    this.setState({logState});
   }
 
-  onCopyClick() {
-    const {logState} = this.state
-    const dummy = document.createElement('textarea')
-    document.body.appendChild(dummy)
-    dummy.value = logState.join('')
-    dummy.select()
-    document.execCommand('copy')
-    document.body.removeChild(dummy)
+  handleCopyClick() {
+    const {logState} = this.state;
+    const dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = logState.join("");
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
   }
 
-  onDisplayChange(event) {
-    this.setState({'displayParam': event.target.value})
-    this.searchParams.set('display', event.target.value)
-    this.updateQueryString()
+  handleDisplayChange(event) {
+    this.setState({"displayParam": event.target.value});
+    this.searchParams.set("display", event.target.value);
+    this.updateQueryString();
   }
 
-  onOutputChange(event) {
-    this.setState({'outputParam': event.target.value})
-    this.searchParams.set('output', event.target.value)
-    this.updateQueryString()
+  handleOutputChange(event) {
+    this.setState({"outputParam": event.target.value});
+    this.searchParams.set("output", event.target.value);
+    this.updateQueryString();
   }
 
-  onLayoutChange(event) {
+  handleLayoutChange(event) {
     // setState is only used for re-trigger rendering.
-    this.setState({'layoutParam': event.target.value})
-    this.searchParams.set('layout', event.target.value)
-    this.updateQueryString()
+    this.setState({"layoutParam": event.target.value});
+    this.searchParams.set("layout", event.target.value);
+    this.updateQueryString();
     // Don't use state to update layout, it's **async**!
-    this.mapLayout = this.mapLayouts[event.target.value]
-    this.updateMapLayout()
+    this.mapLayout = this.mapLayouts[event.target.value];
+    this.updateMapLayout();
   }
 
-  onStartClick() {
+  handleStartClick() {
     // Oh I hate Chromium!
     // Why I can only create AudioPlayer after user action?
-    this.setState({'start': true})
-    this.player = new AudioPlayer()
+    this.setState({"start": true});
+    this.player = new AudioPlayer();
     // Webpack trunked loading.
-    import('./notesBuffers.json').then(({'default': notesBuffers}) => {
-      const totalLength = Object.keys(notesBuffers).length
+    import("./notesBuffers.json").then(({"default": notesBuffers}) => {
+      const totalLength = Object.keys(notesBuffers).length;
       for (const k of Object.keys(notesBuffers)) {
         this.player.decodeAudioData(this.decoder.decode(
           notesBuffers[k].substring(OGG_HEADER_LENGTH)
         ), (buffer) => {
-          this.notesBuffers[k] = buffer
+          this.notesBuffers[k] = buffer;
           if (!this.state.ready) {
             this.setState({
-              'percent': Math.round(
+              "percent": Math.round(
                 Object.keys(this.notesBuffers).length * 100 / totalLength
               ),
-              'ready': Object.keys(this.notesBuffers).length === totalLength
-            })
+              "ready": Object.keys(this.notesBuffers).length === totalLength
+            });
           }
-        })
+        });
       }
-    })
+    });
   }
 
   render() {
@@ -278,40 +289,42 @@ class App extends React.Component {
     // we need to wait, too.
     if (!this.state.start) {
       return (
-        <div className="app">
-          <Container maxWidth="xl">
-            <div className="loading">
+        <div className='app'>
+          <Container maxWidth='xl'>
+            <div className='loading'>
               <Paper>
-                <div className="loading-inner">
-                  <div className="loading-item">
+                <div className='loading-inner'>
+                  <div className='loading-item'>
                     <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.onStartClick.bind(this)}
-                    >Press Any Key to Start</Button>
+                      variant='contained'
+                      color='primary'
+                      onClick={this.handleStartClick}
+                    >
+                      Press Any Key to Start
+                    </Button>
                   </div>
                 </div>
               </Paper>
             </div>
           </Container>
         </div>
-      )
+      );
     }
     if (!this.state.ready) {
       return (
-        <div className="app">
-          <Container maxWidth="xl">
-            <div className="loading">
+        <div className='app'>
+          <Container maxWidth='xl'>
+            <div className='loading'>
               <Paper>
-                <div className="loading-inner">
-                  <div className="loading-item">
+                <div className='loading-inner'>
+                  <div className='loading-item'>
                     <LinearProgress />
                   </div>
-                  <div className="loading-item">
+                  <div className='loading-item'>
                     <LinearProgress
-                      variant="determinate"
+                      variant='determinate'
                       value={this.state.percent}
-                      color="secondary"
+                      color='secondary'
                     />
                   </div>
                 </div>
@@ -319,11 +332,11 @@ class App extends React.Component {
             </div>
           </Container>
         </div>
-      )
+      );
     }
     return (
-      <div className="app">
-        <Container maxWidth="xl">
+      <div className='app'>
+        <Container maxWidth='xl'>
           <Map
             layout={this.mapLayout}
             state={this.state.mapState}
@@ -331,20 +344,20 @@ class App extends React.Component {
             displayParam={this.state.displayParam}
           />
           <Log
-            onSwitchChange={this.onSwitchChange.bind(this)}
-            onDeleteClick={this.onDeleteClick.bind(this)}
-            onSpaceClick={this.onSpaceClick.bind(this)}
-            onReturnClick={this.onReturnClick.bind(this)}
-            onClearClick={this.onClearClick.bind(this)}
-            onCopyClick={this.onCopyClick.bind(this)}
+            onSwitchChange={this.handleSwitchChange}
+            onDeleteClick={this.handleDeleteClick}
+            onSpaceClick={this.handleSpaceClick}
+            onReturnClick={this.handleReturnClick}
+            onClearClick={this.handleClearClick}
+            onCopyClick={this.handleCopyClick}
             outputMode={this.state.outputParam}
             state={this.state.logState}
             enabled={this.state.logEnabled}
           />
           <Settings
-            onDisplayChange={this.onDisplayChange.bind(this)}
-            onOutputChange={this.onOutputChange.bind(this)}
-            onLayoutChange={this.onLayoutChange.bind(this)}
+            onDisplayChange={this.handleDisplayChange}
+            onOutputChange={this.handleOutputChange}
+            onLayoutChange={this.handleLayoutChange}
             defaultDisplayValue={this.state.displayParam}
             displayOptions={this.displayOptions}
             defaultOutputValue={this.state.outputParam}
@@ -355,8 +368,8 @@ class App extends React.Component {
           <Info />
         </Container>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;

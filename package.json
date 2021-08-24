@@ -11,12 +11,12 @@
     "clipboard": "^2.0.6",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-scripts": "3.3.0"
+    "react-scripts": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test && standardx src/*.js",
     "eject": "react-scripts eject"
   },
   "repository": {
@@ -43,5 +43,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-config-standard-jsx": "^10.0.0",
+    "eslint-config-standard-react": "^11.0.1",
+    "eslint-plugin-import": "^2.24.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-react": "^7.24.0",
+    "standardx": "^7.0.0"
   }
 }
