@@ -133,22 +133,22 @@ class App extends React.Component {
     }
     switch (event.code) {
       case "F1":
-        this.onSwitchChange();
+        this.handleSwitchChange();
         return;
       case "F2":
-        this.onSpaceClick();
+        this.handleSpaceClick();
         return;
       case "F3":
-        this.onReturnClick();
+        this.handleReturnClick();
         return;
       case "F4":
-        this.onDeleteClick();
+        this.handleDeleteClick();
         return;
       case "F5":
-        this.onClearClick();
+        this.handleClearClick();
         return;
       case "F6":
-        this.onCopyClick();
+        this.handleCopyClick();
         return;
       default:
         break;
