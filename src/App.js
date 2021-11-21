@@ -34,11 +34,12 @@ class App extends React.Component {
     };
     this.displayOptions = ["digit", "note"];
     this.outputOptions = ["digit", "lilypond-is", "lilypond-es"];
+    const storedLog = window.localStorage.getItem("logState");
     this.state = {
       "start": false,
       "ready": false,
       "percent": 0,
-      "logState": [],
+      "logState": storedLog == null ? [] : JSON.parse(storedLog),
       "logEnabled": true,
       "mapState": {},
       "displayParam": this.searchParams.has("display") &&
@@ -167,6 +168,7 @@ class App extends React.Component {
           : this.notesLily[this.state.outputParam][note]
       );
     }
+    window.localStorage.setItem("logState", JSON.stringify(logState));
     this.setState({logState, mapState});
     this.player.play(note, this.notesBuffers[note]);
   }
@@ -199,6 +201,7 @@ class App extends React.Component {
     }
     const {logState} = this.state;
     logState.pop();
+    window.localStorage.setItem("logState", JSON.stringify(logState));
     this.setState({logState});
   }
 
@@ -208,6 +211,7 @@ class App extends React.Component {
     }
     const {logState} = this.state;
     logState.push(" ");
+    window.localStorage.setItem("logState", JSON.stringify(logState));
     this.setState({logState});
   }
 
@@ -217,12 +221,14 @@ class App extends React.Component {
     }
     const {logState} = this.state;
     logState.push("\n");
+    window.localStorage.setItem("logState", JSON.stringify(logState));
     this.setState({logState});
   }
 
   handleClearClick() {
     let {logState} = this.state;
     logState = [];
+    window.localStorage.removeItem("logState");
     this.setState({logState});
   }
 
